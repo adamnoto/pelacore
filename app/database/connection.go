@@ -50,6 +50,8 @@ func (dbcon *Connection) pgConString() string {
 
 	if dbcon.SSLMode == true {
 		params = append(params, "sslmode=require")
+	} else {
+		params = append(params, "sslmode=disable")
 	}
 
 	return strings.Join(params, " ")

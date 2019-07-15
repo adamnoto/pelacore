@@ -32,13 +32,13 @@ func TestConnection(t *testing.T) {
 			}
 			Convey("It can build a connection string", func() {
 				conStr, err := con.String()
-				So(conStr, ShouldEqual, "host=localhost port=1234 user=root dbname=somedb")
+				So(conStr, ShouldEqual, "host=localhost port=1234 user=root dbname=somedb sslmode=disable")
 				So(err, ShouldBeNil)
 			})
 			Convey("It can build a connection string with password", func() {
 				con.Password = "secret"
 				conStr, err := con.String()
-				So(conStr, ShouldEqual, "host=localhost port=1234 user=root password=secret dbname=somedb")
+				So(conStr, ShouldEqual, "host=localhost port=1234 user=root password=secret dbname=somedb sslmode=disable")
 				So(err, ShouldBeNil)
 			})
 			Convey("It can build a connection string with SSLMode", func() {
