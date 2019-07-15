@@ -16,5 +16,5 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 var Renderer = &Template{
-	templates: template.Must(template.ParseGlob("views/templates/*.html")),
+	templates: template.Must(template.ParseGlob("views/pelacore-ui/build/*.html")),
 }
