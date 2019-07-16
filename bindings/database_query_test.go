@@ -12,6 +12,7 @@ func TestDatabaseQuery(t *testing.T) {
 		dbq := DatabaseQuery{}
 		dbq.Connection.Driver = database.Postgres
 		dbq.Connection.Host = "localhost"
+		dbq.Connection.Database = "database"
 		dbq.Connection.Username = "host"
 		dbq.Query = "SELECT * FROM table"
 
@@ -31,10 +32,28 @@ func TestDatabaseQuery(t *testing.T) {
 				So(dbq.Validate().Error(), ShouldEqual, ErrBlankUsername.Error())
 			})
 
+			Convey("It fails without database", func() {
+				dbq.Connection.Database = ""
+				So(dbq.Validate().Error(), ShouldEqual, ErrBlankDatabase.Error())
+			})
+
 			Convey("It fails without query", func() {
 				dbq.Query = ""
 				So(dbq.Validate().Error(), ShouldEqual, ErrBlankQuery.Error())
 			})
+		})
+
+		Convey("It can convert the data into DatabaseConnection object", func() {
+			dbq.Connection.Password = "secret"
+			dbq.Connection.Port = "1234"
+			conn := dbq.ToDatabaseConnection()
+			So(conn.Database, ShouldEqual, dbq.Connection.Database)
+			So(conn.Driver, ShouldEqual, dbq.Connection.Driver)
+			So(conn.Host, ShouldEqual, dbq.Connection.Host)
+			So(conn.Username, ShouldEqual, dbq.Connection.Username)
+			So(conn.Password, ShouldEqual, dbq.Connection.Password)
+			So(conn.Port, ShouldEqual, dbq.Connection.Port)
+			So(conn.SSLMode, ShouldEqual, dbq.Connection.SSLMode)
 		})
 	})
 }

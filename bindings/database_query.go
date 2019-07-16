@@ -23,6 +23,8 @@ type DatabaseQuery struct {
 var (
 	// ErrBlankDriver is an error when the `driver` is blank
 	ErrBlankDriver = errors.New("driver cannot be blank")
+	// ErrBlankDatabase is an error when the `database` is blank
+	ErrBlankDatabase = errors.New("database cannot be blank")
 	// ErrBlankHost is an error when the `host` is blank
 	ErrBlankHost = errors.New("host cannot be blank")
 	// ErrBlankUsername is an error when the `username` is blank
@@ -46,15 +48,23 @@ func (dbq *DatabaseQuery) Validate() error {
 		errs.Append(ErrBlankUsername)
 	}
 
+	if dbq.Connection.Database == "" {
+		errs.Append(ErrBlankDatabase)
+	}
+
 	if dbq.Query == "" {
 		errs.Append(ErrBlankQuery)
 	}
 
-	return errs
+	if errs.Len() > 0 {
+		return errs
+	}
+
+	return nil
 }
 
-// DatabaseConnection instantiates a database connection object
-func (dbq *DatabaseQuery) DatabaseConnection() database.Connection {
+// ToDatabaseConnection instantiates a database connection object
+func (dbq *DatabaseQuery) ToDatabaseConnection() database.Connection {
 	conn := database.Connection{
 		Driver:   dbq.Connection.Driver,
 		Host:     dbq.Connection.Host,
