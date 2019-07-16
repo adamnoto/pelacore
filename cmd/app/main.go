@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"github.com/labstack/gommon/log"
 	"github.com/saveav/pelacore/bindings"
 	"github.com/saveav/pelacore/handlers"
@@ -18,6 +19,12 @@ func main() {
 
 	e.Logger.SetLevel(log.DEBUG)
 	e.Validator = new(bindings.Validator)
+
+	e.Use(middleware.Recover())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "${method} ${uri} status=${status}\n",
+	}))
+
 	e.Static("/static", views("static"))
 	e.File("/", views("index.html"))
 	e.File("/manifest.json", views("manifest.json"))
